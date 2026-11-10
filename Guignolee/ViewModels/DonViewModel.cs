@@ -19,7 +19,7 @@ namespace Guignolee.ViewModels
             get { return _don.Donateur; }
             set
             {
-                if (_don.Donateur != value)
+                if (_don.Donateur != value && 2 >= _don.Donateur.Length && _don.Donateur.Length <= 50 )
                 {
                     _don.Donateur = value;
                 }
@@ -43,7 +43,7 @@ namespace Guignolee.ViewModels
             get { return _don.Quantite; }
             set
             {
-                if (Quantite != value)
+                if (Quantite != value && Quantite >= 1 && Quantite <= 100)
                 {
                     _don.Quantite = value;
 
@@ -84,5 +84,16 @@ namespace Guignolee.ViewModels
                 return $"{_don.Quantite} article(s) - {_don.Donateur} - reçu le {_don.DateReception:dd-MM-yyyy}";
             }
         }
-    }
+        
+        public string ValiderDonateur()
+        {
+            string donateur = Donateur?.Trim() ?? string.Empty;
+            if (donateur.Length == 0) return "Le donateur est obligatoire.";
+            if (donateur.Length < 2) return "Le donateur doit contenir au moins 2 caractères.";
+            if (donateur.Length > 50) return "Le donateur ne peut pas dépasser 50 caractères.";
+            return string.Empty;
+        }
+        public bool EstValide =>
+            ValiderDonateur().Length == 0 && ValiderDon().Length == 0 && ValiderQuantite().Length == 0;
+    }   
 }

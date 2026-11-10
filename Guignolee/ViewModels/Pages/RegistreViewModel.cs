@@ -1,5 +1,6 @@
 ﻿using Guignolee.Data;
 using Guignolee.Models;
+using Microsoft.UI.Xaml;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,6 +23,20 @@ namespace Guignolee.ViewModels.Pages
                 if (_nouveauDon != value)
                 {
                     _nouveauDon = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+        private string _tri = "Nom";
+       
+        public string Tri
+        {
+            get { return _tri; }
+            set
+            {
+                if (_tri != value)
+                {
+                    _tri = value ?? "Nom";
                     RaisePropertyChanged();
                 }
             }
@@ -71,7 +86,15 @@ namespace Guignolee.ViewModels.Pages
         {
             // TODO: À compléter selon la documentation de la méthode.
 
-            DonSelectionne = null;
+            Dons.Clear();
+            foreach (Don Don in _donDataProvider.GetDons())
+            {
+                Dons.Add(new DonViewModel(Don));
+            }
+
+      
+
+
         }
 
         /// <summary>
@@ -82,7 +105,17 @@ namespace Guignolee.ViewModels.Pages
         {
             _donDataProvider.AjouterDon(new Don(NouveauDon.Donateur, NouveauDon.Contenu, NouveauDon.Quantite, NouveauDon.EstPerissable));
             ChargerDonnees();
-            NouveauDon = new DonViewModel(new Don());
+            Dons.Add(NouveauDon);
+            NouveauDon = new DonViewModel(new Don(NouveauDon.Donateur, NouveauDon.Contenu, NouveauDon.Quantite, NouveauDon.EstPerissable));
+        }
+
+        public void ModifierDon()
+        {
+            _donDataProvider.ModifierDon(new Don(NouveauDon.Donateur, NouveauDon.Contenu, NouveauDon.Quantite, NouveauDon.EstPerissable));
+            ChargerDonnees();
+            Dons.Remove(DonSelectionne);
+            Dons.Add(NouveauDon);
+
         }
     }
 }
